@@ -238,7 +238,7 @@ def main():
     # send_email(favorites)
     logger.info(favorites)
     logger.info("所有用户签到结束")
-    ret = sc_send('签到结果通知', '今日签到已结束\n\n'+favorites, sendkey)
+    ret = sc_send('签到结果通知', '今日签到已结束\n\n'+str(favorites), sendkey)
     logger.info(ret)
 
 if __name__ == '__main__':
