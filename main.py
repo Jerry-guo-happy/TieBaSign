@@ -6,6 +6,9 @@ import time
 import copy
 import logging
 import random
+import os
+import urllib.parse
+import urllib.request
 
 import smtplib
 from email.mime.text import MIMEText
@@ -19,6 +22,7 @@ LIKIE_URL = "http://c.tieba.baidu.com/c/f/forum/like"
 TBS_URL = "http://tieba.baidu.com/dc/common/tbs"
 SIGN_URL = "http://c.tieba.baidu.com/c/c/forum/sign"
 
+sendkey="SCT252141T0jYAXKNe7eau2uLUB5iT24OP"
 ENV = os.environ
 
 HEADERS = {
@@ -51,6 +55,13 @@ KW = "kw"
 
 s = requests.Session()
 
+def sc_send(text, desp='', key=''):
+    postdata = urllib.parse.urlencode({'text': text, 'desp': desp,'channel':"18|0"}).encode('utf-8')
+    url = f'https://sctapi.ftqq.com/{key}.send'
+    req = urllib.request.Request(url, data=postdata, method='POST')
+    with urllib.request.urlopen(req) as response:
+        result = response.read().decode('utf-8')
+    return result
 
 def get_tbs(bduss):
     logger.info("获取tbs开始")
@@ -227,7 +238,8 @@ def main():
     # send_email(favorites)
     logger.info(favorites)
     logger.info("所有用户签到结束")
-
+    ret = sc_send('签到结果通知', '今日签到已结束\n\n'+favorites, sendkey)
+    logger.info(ret)
 
 if __name__ == '__main__':
     main()
